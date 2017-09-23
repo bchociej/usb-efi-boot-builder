@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LEADER=">>"
-THISSCRIPT=$(readlink -f $0)
+THISSCRIPT=$(readlink -f "${0}")
 TIMESTAMP=$(date +"%Y-%m-%d-%H%M.%S.%N")
 
 echo
@@ -72,11 +72,11 @@ DIRTYKEY=0
 if [[ -f /usbboot/key.gpg ]] ; then
 	OVERLAYKEYSUM=$(sha512sum < /boot/overlay/key.gpg | awk '{ print $1 }')
 	USBBOOTKEYSUM=$(sha512sum < /usbboot/key.gpg | awk '{ print $1 }')
-	if [[ "x$OVERLAYKEYSUM" != "x$USBBOOTKEYSUM" ]] ; then 
+	if [[ "x$OVERLAYKEYSUM" != "x$USBBOOTKEYSUM" ]] ; then
 		DIRTYKEY=1
 		echo
 		echo "$LEADER Backing up /usbboot/key.gpg... "
-		cp -v /usbboot/key.gpg /usbboot/key.gpg-${TIMESTAMP}.backup
+		cp -v /usbboot/key.gpg /usbboot/key.gpg-"${TIMESTAMP}".backup
 		if [[ $? -ne 0 ]] ; then
 			echo "Error: backup key.gpg failed"
 			exit 4
@@ -99,7 +99,7 @@ else
 	echo "$LEADER /usbboot/key.gpg is already up-to-date"
 fi
 
-cd /usr/src/linux
+cd /usr/src/linux || exit
 if [[ $? -ne 0 ]] ; then
 	echo "$LEADER Error: failed to cd to /usr/src/linux"
 	exit 13
@@ -141,7 +141,7 @@ echo ok
 
 echo
 echo "$LEADER Copying initramfs to kernel src dir... "
-cp -v /boot/initramfs-genkernel-x86_64-${VERSIONSTRING} /usr/src/linux/usr/initramfs_data.cpio.gz
+cp -v /boot/initramfs-genkernel-x86_64-"${VERSIONSTRING}" /usr/src/linux/usr/initramfs_data.cpio.gz
 if [[ $? -ne 0 ]] ; then
 	echo "Error: copy failed"
 	exit 12
@@ -174,13 +174,13 @@ echo ok
 
 echo
 echo "$LEADER Copying kernel image to /usbboot/ destinations..."
-cp -v /boot/vmlinuz-${VERSIONSTRING} /usbboot/
+cp -v /boot/vmlinuz-"${VERSIONSTRING}" /usbboot/
 if [[ $? -ne 0 ]] ; then
 	echo "Error: copy to /usbboot/ failed"
 	exit 15
 fi
 
-cp -v /boot/vmlinuz-${VERSIONSTRING} /usbboot/EFI/Boot/bootx64.efi
+cp -v /boot/vmlinuz-"${VERSIONSTRING}" /usbboot/EFI/Boot/bootx64.efi
 if [[ $? -ne 0 ]] ; then
 	echo "Error: copy to /usbboot/EFI/Boot/bootx64.efi failed"
 	exit 16
@@ -188,13 +188,13 @@ fi
 echo
 
 echo "$LEADER Copying config & build script to /usbboot/..."
-cp -v /boot/config-${VERSIONSTRING} /usbboot/
+cp -v /boot/config-"${VERSIONSTRING}" /usbboot/
 if [[ $? -ne 0 ]] ; then
 	echo "Error: config copy failed"
 	exit 17
 fi
 
-cp -v $THISSCRIPT /usbboot/build.sh.bak
+cp -v "${THISSCRIPT}" /usbboot/build.sh.bak
 if [[ $? -ne 0 ]] ; then
 	echo "Error: build.sh.bak copy failed"
 	exit 17
