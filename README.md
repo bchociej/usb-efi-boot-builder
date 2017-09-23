@@ -19,4 +19,4 @@ Clearly, your GPG symmetric key should be protected with a passphrase. The initr
 
 ## License
 
-Apache-2.0. See `LICENSE`.
+Copyright 2017 Ben Chociej. Available to all under the Apache-2.0 license. See `LICENSE`.
